@@ -58,3 +58,17 @@ def get_all_artists_view(request):
         return JsonResponse({"artists": artist_data})
     else:
         return JsonResponse({"error": "Only GET requests are allowed."}, status=400)
+    
+
+
+@csrf_exempt
+def delete_artist_view(request, artist_id):
+    if request.method == 'DELETE':
+        try:
+            artist = Artist.objects.get(id=artist_id)
+            artist.delete()
+            return JsonResponse({"message": "Artist deleted successfully!"})
+        except Artist.DoesNotExist:
+            return JsonResponse({"error": "Artist not found."}, status=404)
+    else:
+        return JsonResponse({"error": "Only DELETE requests are allowed."}, status=400)
